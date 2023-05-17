@@ -36,7 +36,8 @@ data class Point2D(val x: Double, val y: Double) {
   }
 
   fun distance(p: Point2D): Double {
-    return Math.sqrt((this.x - p.x) ** 2 +
-            (this.y - p.y) ** 2)
+    val x_dist = Math.pow((this.x - p.x), 2.0)
+    val y_dist = Math.pow((this.y - p.y), 2.0)
+    return Math.sqrt(x_dist, y_dist)
   }
 }
