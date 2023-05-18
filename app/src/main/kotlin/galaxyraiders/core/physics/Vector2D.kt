@@ -1,6 +1,6 @@
 /************************************************************************************
  *  MACO218 - Técnicas de Programação II
- *  Profº Dr. Alfredo Goldman vel Lejbman 
+ *  Profº Dr. Alfredo Goldman vel Lejbman
  *  Carlos Alberto Marques Rabelo - NUSP: 12623946
  *  EP1
  *  17/05/2023
@@ -74,7 +74,14 @@ data class Vector2D(val dx: Double, val dy: Double) {
 
   private fun angle(): Double {
     var cosine: Double = this.dx / this.magnitude
-    return Math.acos(cosine)
+    var angle: Double = 0.0
+    if (this.dx >= 0 && this.dy >= 0
+        || this.dx < 0 && this.dy >= 0)
+      angle = Math.acos(cosine)
+    else if (this.dx < 0 && this.dy < 0
+            || this.dx >= 0 && this.dy < 0)
+      angle = -Math.acos(cosine)
+    return angle
   }
 }
 
