@@ -1,3 +1,11 @@
+/************************************************************************************
+ *  MACO218 - Técnicas de Programação II
+ *  Profº Dr. Alfredo Goldman vel Lejbman 
+ *  Carlos Alberto Marques Rabelo - NUSP: 12623946
+ *  EP1
+ *  17/05/2023
+ ************************************************************************************/
+
 @file:Suppress("UNUSED_PARAMETER") // <- REMOVE
 package galaxyraiders.core.physics
 
