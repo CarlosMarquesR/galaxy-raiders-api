@@ -6,7 +6,7 @@
  *  25/06/2023
  ************************************************************************************/
 
- package galaxyraiders.core.game
+package galaxyraiders.core.game
 
 import galaxyraiders.core.physics.Point2D
 import galaxyraiders.core.physics.Vector2D
