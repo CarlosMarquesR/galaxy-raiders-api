@@ -316,6 +316,16 @@ class SpaceFieldTest {
   }
 
   @Test
+  fun `it can remove a missile` () {
+    spaceField.generateMissile()
+    val missile = spaceField.missiles.last()
+    val amountOfMissilesBeforeRemotion = spaceField.missiles.size
+    spaceField.removeMissile(missile)
+    val amountOfMissilesAfterRemotion = spaceField.missiles.size
+    assertEquals(amountOfMissilesBeforeRemotion - 1, amountOfMissilesAfterRemotion)
+  }
+
+  @Test
   fun `it can remove missiles outside its boundary`() {
     spaceField.generateMissile()
 
@@ -344,6 +354,16 @@ class SpaceFieldTest {
     spaceField.trimMissiles()
 
     assertNotEquals(-1, spaceField.missiles.indexOf(missile))
+  }
+
+  @Test
+  fun `it can remove an asteroid` () {
+    spaceField.generateAsteroid()
+    val amountOfAsteroidsBeforeRemotion = spaceField.asteroids.size
+    val asteroid = spaceField.asteroids.last()
+    spaceField.removeAsteroid(asteroid)
+    val amountOfAsteroidsAfterRemotion = spaceField.asteroids.size
+    assertEquals(amountOfAsteroidsBeforeRemotion - 1, amountOfAsteroidsAfterRemotion)
   }
 
   @Test
