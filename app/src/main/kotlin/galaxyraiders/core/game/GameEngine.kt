@@ -88,6 +88,14 @@ class GameEngine(
     this.field.spaceObjects.forEachPair {
         (first, second) ->
       if (first.impacts(second)) {
+        if ((first is Asteroid) and (second is Missile) or 
+            (first is Missile) and (second is Asteroid)) {
+              var asteroid = if (first is Asteroid) first else second as Asteroid
+              var missile = if (first is Missile) first else second as Missile
+              field.generateExplosion(missile.center, missile.radius)
+              field.removeAsteroid(asteroid)
+              field.removeMissile(missile)
+        }
         first.collideWith(second, GameEngineConfig.coefficientRestitution)
       }
     }
