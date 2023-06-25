@@ -35,6 +35,9 @@ class GameEngine(
 
   var playing = true
 
+  var gameScore: Double = 0.0
+  var asteroidsDestroyed = 0
+
   fun execute() {
     while (true) {
       val duration = measureTimeMillis { this.tick() }
@@ -95,6 +98,8 @@ class GameEngine(
               field.generateExplosion(missile.center, missile.radius)
               field.removeAsteroid(asteroid)
               field.removeMissile(missile)
+              this.asteroidsDestroyed = this.asteroidsDestroyed + 1
+              this.gameScore = this.gameScore + (asteroid.radius * asteroid.mass)
         }
         first.collideWith(second, GameEngineConfig.coefficientRestitution)
       }
