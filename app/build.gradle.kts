@@ -62,6 +62,9 @@ dependencies {
   // Use the Kotlin JUnit 5 integration.
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.6.21")
 
+  // Use Klaxon
+  implementation("com.beust:klaxon:5.5")
+
   // Allow JUnit 5 parameterized tests
   testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 }
