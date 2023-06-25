@@ -1,11 +1,15 @@
 package galaxyraiders.core.game
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Klaxon
 import galaxyraiders.Config
 import galaxyraiders.ports.RandomGenerator
 import galaxyraiders.ports.ui.Controller
 import galaxyraiders.ports.ui.Controller.PlayerCommand
 import galaxyraiders.ports.ui.Visualizer
 import kotlin.system.measureTimeMillis
+import java.io.File
+import java.io.StringReader
 
 const val MILLISECONDS_PER_SECOND: Int = 1000
 
@@ -36,9 +40,17 @@ class GameEngine(
   var playing = true
 
   var gameScore: Double = 0.0
-  var asteroidsDestroyed = 0
+  var destroyedAsteroids = 0
+
+  var scoreboardFile = File("src/main/kotlin/galaxyraiders/core/score/Scoreboard.json")
+  var leaderboardFile = File("src/main/kotlin/galaxyraiders/core/score/Leaderboard.json")
+  var scoreboardJSON = JsonObject()
+  var leaderboardJSON = JsonObject()
 
   fun execute() {
+
+    this.updateJSONs()
+
     while (true) {
       val duration = measureTimeMillis { this.tick() }
 
@@ -98,12 +110,39 @@ class GameEngine(
               field.generateExplosion(missile.center, missile.radius)
               field.removeAsteroid(asteroid)
               field.removeMissile(missile)
-              this.asteroidsDestroyed = this.asteroidsDestroyed + 1
-              this.gameScore = this.gameScore + (asteroid.radius * asteroid.mass)
+              this.destroyedAsteroids += 1
+              this.gameScore += (asteroid.radius * asteroid.mass)
+              this.updateJSONs()
         }
         first.collideWith(second, GameEngineConfig.coefficientRestitution)
       }
     }
+  }
+
+  fun checkJSONsExistence() {
+    if (!this.scoreboardFile.exists()) this.scoreboardFile.createNewFile()
+    if (this.scoreboardFile.readText().isEmpty()) this.scoreboardFile.writeText("{}")
+
+    if (!this.leaderboardFile.exists()) this.leaderboardFile.createNewFile()
+    if (this.leaderboardFile.readText().isEmpty()) this.leaderboardFile.writeText("{}")
+  }
+  
+  fun updateJSONs() {
+    
+    this.checkJSONsExistence()
+    
+    this.scoreboardJSON = Klaxon().parseJsonObject(this.scoreboardFile.reader())
+    this.leaderboardJSON = Klaxon().parseJsonObject(this.leaderboardFile.reader())
+
+    var line = "{\"score\": ${this.gameScore}, \"destroyedAsteroids\": ${this.destroyedAsteroids}}"
+    this.scoreboardJSON = Klaxon().parseJsonObject(StringReader(line))
+    this.scoreboardFile.writeText(this.scoreboardJSON.toJsonString(prettyPrint = true))
+
+    var sorted = this.scoreboardJSON.toSortedMap((compareByDescending { this.scoreboardJSON.obj(it)?.int("score") }))
+    var top3 = sorted.toList().take(3)
+    this.leaderboardJSON.clear()
+    this.leaderboardJSON.putAll(top3)
+    this.leaderboardFile.writeText(this.leaderboardJSON.toJsonString(prettyPrint = true))
   }
 
   fun moveSpaceObjects() {
