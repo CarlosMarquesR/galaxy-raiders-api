@@ -10,6 +10,7 @@ import galaxyraiders.ports.ui.Visualizer
 import kotlin.system.measureTimeMillis
 import java.io.File
 import java.io.StringReader
+import java.time.Instant
 
 const val MILLISECONDS_PER_SECOND: Int = 1000
 
@@ -46,9 +47,11 @@ class GameEngine(
   var leaderboardFile = File("src/main/kotlin/galaxyraiders/core/score/Leaderboard.json")
   var scoreboardJSON = JsonObject()
   var leaderboardJSON = JsonObject()
+  var startTime = Instant.now().toString()
 
   fun execute() {
 
+    this.checkJSONsExistence()
     this.updateJSONs()
 
     while (true) {
@@ -127,11 +130,9 @@ class GameEngine(
     if (this.leaderboardFile.readText().isEmpty()) this.leaderboardFile.writeText("{}")
   }
   
-  fun updateJSONs() {
+  fun updateJSONs() {   
     
-    this.checkJSONsExistence()
-    
-    this.scoreboardJSON = Klaxon().parseJsonObject(this.scoreboardFile.reader())
+    this.scoreboardJSON[this.startTime] = Klaxon().parseJsonObject(this.scoreboardFile.reader())
     this.leaderboardJSON = Klaxon().parseJsonObject(this.leaderboardFile.reader())
 
     var line = "{\"score\": ${this.gameScore}, \"destroyedAsteroids\": ${this.destroyedAsteroids}}"
